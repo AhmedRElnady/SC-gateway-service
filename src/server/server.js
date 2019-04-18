@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const connect = require('../config/db/mongoose');
 
 
-// const gatewayRoutes = require('../api/controllers/gateway.controller');
+const gatewayRoutes = require('../api/controllers/gateway.controller');
 
 function bootstrap(port, dbHost, dbName) {
     return new Promise(async (resolve, reject) => {
@@ -36,7 +36,7 @@ function bootstrap(port, dbHost, dbName) {
             next();
         });
 
-        // app.use(gatewayRoutes);
+        app.use(gatewayRoutes);
         app.use('/api', routers);
 
         process.on('uncaughtException', (err) => {
