@@ -8,5 +8,9 @@ module.exports = {
             url: "http://localhost:5000",
             prefix: "shopping-carts"
         }
+    },
+    token: {
+        secret: 'elnadySecret',
+        expiresIn: '7d'
     }
 }
