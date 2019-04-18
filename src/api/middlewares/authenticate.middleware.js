@@ -6,6 +6,7 @@ function authenticate() {
     return (req, res, next) => {
         (async () => {
             console.log(">>>> authenicated user >>>>>");
+            next();
         })()
     }
 }
