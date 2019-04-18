@@ -9,7 +9,7 @@ const authenticate = require('../api/middlewares/authenticate.middleware');
 const cartApi = apiAdapter(cartURL);
 
 router.get('/carts', authenticate(), (req, res) => {
-    cartApi.get(req.path)
+    cartApi.get(req.path, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
         .then(cartRes => {
             res.status(cartRes.status).json({ data: cartRes.data });
         })
@@ -19,7 +19,7 @@ router.get('/carts', authenticate(), (req, res) => {
 });
 
 router.get('/carts/:id', authenticate(), (req, res) => {
-    cartApi.get(req.path)
+    cartApi.get(req.path, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
         .then(cartRes => {
             res.status(cartRes.status).json({ data: cartRes.data });
         })
@@ -29,14 +29,14 @@ router.get('/carts/:id', authenticate(), (req, res) => {
 });
 
 router.post('/carts/:id/items', authenticate(), (req, res) => {
-    cartApi.post(req.path, req.body)
+    cartApi.post(req.path, req.body, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
         .then(cartRes => {
             res.status(cartRes.status).json({ data: cartRes.data })
         })
 })
 
 router.delete('/carts/:cartId/items/itemId', authenticate(), (req, res) => {
-    cartApi.delete(req.path)
+    cartApi.delete(req.path, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
         .then(cartRes => {
             res.status(cartRes.status).json({ data: cartRes.data })
         })
