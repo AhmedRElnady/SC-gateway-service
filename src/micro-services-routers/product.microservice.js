@@ -9,7 +9,7 @@ const authenticate = require('../api/middlewares/authenticate.middleware');
 const productApi = apiAdapter(productURL);
 
 router.get('/products', authenticate(), (req, res) => {
-    productApi.get(req.path)
+    productApi.get(req.path, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
         .then(productRes => {
             res.status(productRes.status).json({ data: productRes.data })
         })
@@ -19,7 +19,7 @@ router.get('/products', authenticate(), (req, res) => {
 })
 
 router.post('/products', authenticate(), (req, res) => {
-    productApi.post(req.path, req.body)
+    productApi.post(req.path, req.body, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
         .then(productRes => {
             res.status(productRes.status).send(productRes.data);
         })
@@ -29,7 +29,7 @@ router.post('/products', authenticate(), (req, res) => {
 })
 
 router.get('/products/:id', authenticate(), (req, res) => {
-    productApi.get(req.path)
+    productApi.get(req.path, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
         .then(productRes => {
             res.status(productRes.status).json({ data: productRes.data })
         })
@@ -39,7 +39,7 @@ router.get('/products/:id', authenticate(), (req, res) => {
 })
 
 router.patch('/products/:id', authenticate(), (req, res) => {
-    productApi.patch(req.path, req.body)
+    productApi.patch(req.path, req.body, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
         .then(productRes => {
             res.status(productRes.status).json({ data: productRes.data })
         })
@@ -49,7 +49,7 @@ router.patch('/products/:id', authenticate(), (req, res) => {
 })
 
 router.delete('/products/:id', authenticate(), (req, res) => {
-    productApi.delete(req.path)
+    productApi.delete(req.path, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
         .then(productRes => {
             res.status(productRes.status).json({ data: productRes.data })
         })
