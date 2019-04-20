@@ -8,8 +8,25 @@ const authenticate = require('../api/middlewares/authenticate.middleware');
 
 const productApi = apiAdapter(productURL);
 
-router.get('/products', authenticate(), (req, res) => {
-    productApi.get(req.path, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
+/* 
+    This route does not have any kind of authentication or authorization rules
+    any body can list products.
+*/
+router.get('/products', (req, res) => {
+    productApi.get(req.path)
+        .then(productRes => {
+            res.status(productRes.status).json({ data: productRes.data })
+        })
+        .catch(err => {
+        })
+});
+
+/* 
+    This route does not have any kind of authentication or authorization rules
+    any body can show a specific product.
+*/
+router.get('/products/:id', (req, res) => {
+    productApi.get(req.path)
         .then(productRes => {
             res.status(productRes.status).json({ data: productRes.data })
         })
@@ -28,15 +45,7 @@ router.post('/products', authenticate(), (req, res) => {
         })
 })
 
-router.get('/products/:id', authenticate(), (req, res) => {
-    productApi.get(req.path, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
-        .then(productRes => {
-            res.status(productRes.status).json({ data: productRes.data })
-        })
-        .catch(err => {
 
-        })
-})
 
 router.patch('/products/:id', authenticate(), (req, res) => {
     productApi.patch(req.path, req.body, { headers: { "x-payload-header": JSON.stringify(req.tokenPayload) } })
