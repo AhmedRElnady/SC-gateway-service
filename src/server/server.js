@@ -11,11 +11,6 @@ function bootstrap(port, dbHost, dbName) {
     return new Promise(async (resolve, reject) => {
         const dbInstance = await connect(dbHost, dbName);
 
-        // app.use((req, res, next) => {
-        //     req.db = dbInstance;
-        //     next();
-        // })
-
         app.use('/', (req, res, next) => {
 
             let contype = req.headers['content-type'];
@@ -39,8 +34,13 @@ function bootstrap(port, dbHost, dbName) {
         app.use(gatewayRoutes);
         app.use('/api', routers);
 
+
+        app.use((err, req, res, next) => {
+            console.log("$$$$ err $$$$", err);
+        })
+
         process.on('uncaughtException', (err) => {
-            console.log(">>>> err ", err);
+            console.log(">>>> err >>>> ", err);
         });
 
         process.on('unhandledRejection', (err) => {
@@ -51,6 +51,7 @@ function bootstrap(port, dbHost, dbName) {
             console.log(`.... Api-Gateway server started on port ${port} ....`)
 
         })
+
         resolve(server);
     })
 }

@@ -31,11 +31,10 @@ router.post('/login', validate(), async (req, res, next) => {
             MSURL = config.get('MS.cart.url'),
             MSPrefix = config.get('MS.cart.prefix'),
             userId, userRole, cartId;
-        
-        
+
         const user = await User.findOne({ email: req.body.email });
-        
-        if (!user) 
+
+        if (!user)
             return res.status(200).json({ success: false, message: 'Incorrect login credentials.' }); // 404
 
         if (! await bcrypt.isValidPassword(req.body.password, user.password))
@@ -48,7 +47,7 @@ router.post('/login', validate(), async (req, res, next) => {
         if (userRole === 'CUSTOMER') {
             _apiAdapter = apiAdapter(MSURL);
 
-            const cartRes = await _apiAdapter.post(`/${MSPrefix}/`, {userId: user._id})
+            const cartRes = await _apiAdapter.post(`/${MSPrefix}/`, { userId: user._id })
             cartId = cartRes.data.data; // refactor
         }
 
@@ -58,7 +57,8 @@ router.post('/login', validate(), async (req, res, next) => {
         res.status(200).json({
             success: true,
             msg: 'logged in successfully, welcome',
-            data: {'userId': userId, 'name': user.name, 'email': user.email, 'role': userRole},
+            // data to be stored in the local storage in the client-side.
+            data: { 'userId': userId, 'name': user.name, 'email': user.email, 'role': userRole, 'cartId': cartId },
             token
         })
     } catch (e) {
@@ -68,15 +68,14 @@ router.post('/login', validate(), async (req, res, next) => {
 })
 
 const _setTokenPayload = (GWUserID, userRole, userDetails) => {
-    return new Promise((resolve, reject) => {   
+    return new Promise((resolve, reject) => {
         let payload = {
             id: GWUserID,
             role: userRole
         }
 
-        if(userRole === 'CUSTOMER') {
-            payload.cartId = userDetails.cartId
-        }
+        if (userRole === 'CUSTOMER')
+            payload.cartId = userDetails // ToDo: refactor
 
         resolve(payload);
     })
